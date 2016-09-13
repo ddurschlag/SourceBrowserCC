@@ -23,3 +23,27 @@
     margin:0px 0px 52px 0px;
     visibility:hidden;
 }
+
+.result-list div{
+    margin: 1px;
+    padding: 2px;
+    background-color: #c0c0c0;
+}
+
+.result-list .Error{
+    color: red;
+    font-weight: bold;
+}
+
+.result-list .Warning{
+    color: #e0e010;
+}
+
+.result-list .Info{
+    color: #0000f0;
+}
+
+.result-list .Debug{
+    color: #000000;
+    background-color: #a0a0a0;
+}

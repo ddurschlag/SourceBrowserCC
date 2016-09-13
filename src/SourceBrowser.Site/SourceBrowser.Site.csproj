@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -529,6 +530,10 @@
     <ProjectReference Include="..\SourceBrowser.SolutionRetriever\SourceBrowser.SolutionRetriever.csproj">
       <Project>{f90b7983-d137-4c89-b668-a6082be39303}</Project>
       <Name>SourceBrowser.SolutionRetriever</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SourceBrowser.Tracing\SourceBrowser.Tracing.csproj">
+      <Project>{0f6474d4-644b-47d3-9aa2-2496f00735aa}</Project>
+      <Name>SourceBrowser.Tracing</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

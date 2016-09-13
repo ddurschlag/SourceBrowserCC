@@ -4,7 +4,7 @@ using LibGit2Sharp;
 
 namespace SourceBrowser.SolutionRetriever
 {
-    public class GitHubRetriever : IRepositoryRetriever
+    public class BitBucketRetriever : IRepositoryRetriever
     {
         private string _url;
         private Guid guid = Guid.NewGuid();
@@ -12,7 +12,7 @@ namespace SourceBrowser.SolutionRetriever
         public string UserName { get; set; }
         public string RepoName { get; set; }
 
-        public GitHubRetriever(string url)
+        public BitBucketRetriever(string url)
         {
             if (!(url.StartsWith("https://") || url.StartsWith("http://")))
                 url = "https://" + url;
@@ -22,14 +22,12 @@ namespace SourceBrowser.SolutionRetriever
             if (splitUrl.Length < 3)
                 return;
 
-            UserName = splitUrl[splitUrl.Length - 2];
+            UserName = splitUrl[splitUrl.Length - 3];
             RepoName = splitUrl[splitUrl.Length - 1];
         }
 
         public bool IsValidUrl()
         {
-            if (!_url.Contains("github.com"))
-                return false;
             if (String.IsNullOrWhiteSpace(UserName))
                 return false;
             if (String.IsNullOrWhiteSpace(RepoName))
@@ -38,9 +36,20 @@ namespace SourceBrowser.SolutionRetriever
             return true;
         }
 
+        public string ProvideParsedReadme()
+        {
+            string readmeLocation = Path.Combine(_absoluteRepositoryPath, "README.md");
+            if (!File.Exists(readmeLocation))
+            {
+                return String.Empty;
+            }
+            var md = new MarkdownDeep.Markdown();
+            return md.Transform(File.ReadAllText(readmeLocation));
+        }
+
         public string RetrieveProject()
         {
-            string baseRepositoryPath = Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath("~/"),"GithubStaging");
+            string baseRepositoryPath = Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath("~/"), "GithubStaging");
 
             _absoluteRepositoryPath = Path.Combine(baseRepositoryPath, UserName, RepoName);
 
@@ -51,7 +60,14 @@ namespace SourceBrowser.SolutionRetriever
             }
             Directory.CreateDirectory(_absoluteRepositoryPath);
 
-            Repository.Clone(_url, _absoluteRepositoryPath);
+            //TODO: Bitbucket API to get this
+            var cloneUrl = _url
+                .Replace("projects", "scm")
+                .Replace("/repos", "")
+                .TrimEnd('/')
+                + ".git";
+
+            Repository.Clone(cloneUrl, _absoluteRepositoryPath);
             return _absoluteRepositoryPath;
         }
 
@@ -73,21 +89,6 @@ namespace SourceBrowser.SolutionRetriever
                 fileInfo.Delete();
             }
             Directory.Delete(directory);
-        }
-
-        /// <summary>
-        /// Returns contents of the readme parsed to HTML
-        /// </summary>
-        /// <returns></returns>
-        public string ProvideParsedReadme()
-        {
-            string readmeLocation = Path.Combine(_absoluteRepositoryPath, "README.md");
-            if (!File.Exists(readmeLocation))
-            {
-                return String.Empty;
-            }
-            var md = new MarkdownDeep.Markdown();
-            return md.Transform(File.ReadAllText(readmeLocation));
         }
     }
 }

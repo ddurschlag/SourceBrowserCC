@@ -54,8 +54,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitBucketRetriever.cs" />
     <Compile Include="GitHubInformationRetriever.cs" />
     <Compile Include="GitHubSolutionRetriever.cs" />
+    <Compile Include="IRepositoryRetriever.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
